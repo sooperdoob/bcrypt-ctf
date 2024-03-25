@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CTF Challenge</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="#">CTF Challenge</a>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="container mt-5">
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Encrypt Data</h5>
+            <div class="form-group">
+              <label for="data">Data to Encrypt:</label>
+              <input type="text" class="form-control" id="data" placeholder="Enter data to encrypt">
+            </div>
+            <div class="form-group">
+              <label for="passwordEncrypt">Password:</label>
+              <input type="password" class="form-control" id="passwordEncrypt" placeholder="Enter alphanumeric password">
+            </div>
+            <button type="button" class="btn btn-primary" onclick="encryptData()">Encrypt</button>
+            <p id="encryptedResult" class="mt-3"></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- JavaScript -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bcryptjs/2.4.3/bcrypt.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+  <script>
+    function encryptData() {
+      var data = document.getElementById("data").value;
+      var passwordEncrypt = document.getElementById("passwordEncrypt").value;
+
+      // Encrypt the data
+      var encryptedData = encryptAES(data, passwordEncrypt);
+
+      // Display encrypted data and password hash
+      document.getElementById("encryptedResult").innerHTML = "Encrypted Data: " + encryptedData + "<br>Password Hash: " + hashPassword(passwordEncrypt);
+    }
+
+    function encryptAES(data, password) {
+      var key = CryptoJS.enc.Utf8.parse(password);
+      var iv = CryptoJS.enc.Utf8.parse(password);
+
+      var encrypted = CryptoJS.AES.encrypt(data, key, {
+        iv: iv,
+        mode: CryptoJS.mode.CBC,
+        padding: CryptoJS.pad.Pkcs7
+      });
+
+      return encrypted.toString();
+    }
+
+    function hashPassword(password) {
+      return dcodeIO.bcrypt.hashSync(password, dcodeIO.bcrypt.genSaltSync(10));
+    }
+  </script>
+</body>
+</html>
